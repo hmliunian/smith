@@ -1,0 +1,32 @@
+code     segment
+assume   cs:code
+start:   mov cx,15;行的计数器
+         mov bx,0;头的计数器
+lie:     push cx
+         mov cx,15;列的计数器
+         inc bx
+         push bx
+tou:     mov dl,20h
+         mov ah,2
+         dec bx
+         int 21h
+         cmp bx,0000h
+         ja tou
+         pop bx
+ba:      mov dl,'8';输出8空格
+         mov ah,2
+         int 21h
+         mov dl,20h
+         mov ah,2
+         int 21h
+         loop ba
+         mov dl,0dh;回车
+         int 21h
+         mov dl,0ah;换行
+         int 21h
+         pop cx
+         loop lie
+         mov ah,4ch
+         int 20h                      
+code     ends
+         end start
