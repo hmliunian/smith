@@ -1,0 +1,42 @@
+data     segment
+string   db'In 1990,the exchange rate was 8.1/$'
+num      db 0 
+char     db 0 
+other    db 0 
+data     ends
+code     segment
+assume   cs:code,ds:data
+start:   mov ax,data
+         mov ds,ax
+         mov di,offset string
+cc:      mov bl,[di]
+         cmp bl,'$'
+         je exit
+         cmp bl,30h
+         jb other1
+         cmp bl,39h
+         jbe num1
+         cmp bl,41h
+         jb other1
+         cmp bl,5ah
+         jbe char1
+         cmp bl,61h
+         jb other1
+         cmp bl,7ah
+         jbe char1
+         ja other1
+num1:    inc num
+         inc di
+         jmp cc     
+char1:   inc char
+         inc di
+         jmp cc
+other1:  inc other
+         inc di
+         jmp cc
+exit:    
+         mov ah,4ch
+         int 21h
+ 
+code     ends
+         end start
