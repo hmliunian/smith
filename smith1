@@ -1,0 +1,43 @@
+# smithdata     segment
+message  db 0dh,0ah,'$'
+code     segment
+assume   cs:code,ds:data
+
+start:   call receive
+         mov dx,offset message;回车换行
+         mov ax,data
+         mov ds,ax
+         mov ah,9
+         int 21h
+         call disp
+         mov ah,4ch
+         int 21h                    
+receive  proc;把值放入bx中
+         mov bx,0
+         mov cx,4
+vv:      mov ax,bx
+         mov dx,10
+         mul dx
+         mov bx,ax
+         mov ah,1
+         int 21h
+         sub al,30h
+         mov ah,0
+         add bx,ax
+         loop vv
+         ret
+receive  endp
+disp     proc
+         mov cx,16
+cc:      shl bx,1
+         jb  one;如果等于1 
+         mov dl,30h
+         jmp zero
+one:     mov dl,31h
+zero:    mov ah,2
+         int 21h
+         loop cc    
+         ret
+disp     endp
+code     ends
+         end start
