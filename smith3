@@ -1,0 +1,28 @@
+data    segment
+save    dw 4 dup(?)
+data    ends
+code    segment 
+assume  cs:code,ds:data
+start:  mov ah,1
+        int 21h
+        cmp al,0dh;如果为回车退出
+        je exit
+        cmp al,39h
+        jbe num;如果为数字跳到数字
+        cmp al,'F'
+        jbe LETTER
+        cmp al,'f'
+        jbe lette
+num:    sub al,30h
+        jmp sss
+lette:  sub al,57h
+        jmp sss
+LETTER: sub al,37h
+sss:    mov cl,4
+        shl save,cl
+        add save,al
+        jmp start           
+exit:   mov ah,4ch
+        int 21h
+code    ends
+        end start
